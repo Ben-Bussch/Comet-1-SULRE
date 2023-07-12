@@ -18,6 +18,18 @@ def drag(rho, v, s, Cd):
     Fd = -.5*rho*v**2*s*Cd
     return Fd
 
+def density(h):
+    p0 = 101325     #Pa
+    T0 = 288.15     #K
+    g0 = 9.80665    #m/s/s
+    L = 0.0065      #temperature lapse rate K/m
+    R = 8.31446     #Universal Gas Constant
+    M = 0.0289652   #kg/mol (molar mass of dry air)
+    rho = ((p0*M)/(R*T0))*(1-L*h/T0)**(((g0*M)/(R*L))-1)
+    return rho
+    
+    
+
 def terminate(h1, h0, dt):
     run = True
     hdot = (h1 - h0)/dt
@@ -43,13 +55,16 @@ def solver(tb, mdot, ms, Ft, s, Cd, dt):
     v = [v0]
     a = [a0]
     F = [F0]
+    rho = [density(h[0])]
     time = [t]
+    
     
     
     run = True
     count = 0
     while run:
-        Fsum = gravity(m[count], h[count]) + drag(1.225, v[count], s, Cd)
+        
+        Fsum = gravity(m[count], h[count]) + drag(rho[count], v[count], s, Cd)
         if m[count] > ms:
             Fsum += Ft
             m1 = m[count] - mdot*dt
@@ -63,13 +78,14 @@ def solver(tb, mdot, ms, Ft, s, Cd, dt):
         a1 = Fsum/m[count]
         a.append(a1)
         
-        
-        
         v1 = v[count] + (a[count+1]+a[count])*dt*0.5
         v.append(v1)
         
         h1 = h[count] + (v[count+1]+v[count])*dt*0.5
         h.append(h1)
+        
+        rho1 = density(h[count])
+        rho.append(rho1)
         
         t = t + dt
         time.append(t)
@@ -82,7 +98,7 @@ def solver(tb, mdot, ms, Ft, s, Cd, dt):
         
         count = count + 1
     print("Time: ",t," Force: ",Fsum," Acc: ", a1," v: ", v1, " h: ", h1, " Mass: ", m1 )    
-    return m,h,v,a,F,time
+    return m,h,v,a,F,rho,time
         
 """Rocket Parameters"""
 thrust = 1500   #N
@@ -91,12 +107,11 @@ ms = 15         #kg
 s = np.pi*(.075**2)
 Cd = 0.75
 
-rho = 1.225     #kg/m^3
 burn_time = 15  #s 
 dt = 0.002 #time step, s
 
 #tb, mdot, ms, Ft, s, Cd, dt
-m,h,v,a,F,t = solver(burn_time, mdot, ms, thrust, s, Cd, dt)
+m,h,v,a,F,rho,t = solver(burn_time, mdot, ms, thrust, s, Cd, dt)
 
 
 plt.figure(1)
@@ -142,6 +157,17 @@ plt.ylabel("Acceleration [m/s^2]")
 
 plt.savefig('Acceleration_vs_time.png', dpi=300)
 
+
+plt.figure(5)
+plt.clf()
+
+plt.plot(h, rho)
+
+plt.grid(1)
+plt.xlabel("height [m]")
+plt.ylabel("Atmospheric Density [kg/m^3]")
+
+plt.savefig('Density_vs_height.png', dpi=300)
 
 
     
