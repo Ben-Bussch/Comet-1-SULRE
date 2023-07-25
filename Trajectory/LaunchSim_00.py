@@ -64,6 +64,7 @@ def solver(tb, mdot, ms, Ft, s, Cd, dt):
     
     run = True
     count = 0
+    rail = True
     while run:
         
         Fsum = gravity(m[count], h[count]) + drag(rho[count], v[count], s, Cd)
@@ -92,7 +93,10 @@ def solver(tb, mdot, ms, Ft, s, Cd, dt):
         t = t + dt
         time.append(t)
         #print("Time: ",t," Force: ",Fsum, " Mass: ", m1)
-        if h[count] > 11.8 and h[count] < 12.2:
+        if h[count] > 11.9 and rail:
+            """Saves rail exit velocity"""    
+            vrail = v[count]
+            rail = False
             print("v: ", v[count], "h: ", h[count])
         
         #print("Time: ",t," Force: ",Fsum," Acc: ", a1," v: ", v1, " h: ", h1, " Mass: ", m1 )
@@ -105,11 +109,11 @@ def solver(tb, mdot, ms, Ft, s, Cd, dt):
 """Rocket Parameters"""
 thrust = 1500   #N
 mdot = 0.785    #kg/s
-ms = 15         #kg
+ms = 25         #kg
 s = np.pi*(.075**2)
 Cd = 0.75
 
-burn_time = 10  #s 
+burn_time = 10.5  #s 
 dt = 0.002 #time step, s
 
 
