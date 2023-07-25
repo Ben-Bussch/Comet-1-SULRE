@@ -25,7 +25,9 @@ def density(h):
     L = 0.0065      #temperature lapse rate K/m
     R = 8.31446     #Universal Gas Constant
     M = 0.0289652   #kg/mol (molar mass of dry air)
-    rho = ((p0*M)/(R*T0))*(1-L*h/T0)**(((g0*M)/(R*L))-1)
+    
+    hs = 125        #Start height above sea level, m
+    rho = ((p0*M)/(R*T0))*(1-L*(h+hs)/T0)**(((g0*M)/(R*L))-1)
     return rho
     
     
@@ -107,8 +109,9 @@ ms = 15         #kg
 s = np.pi*(.075**2)
 Cd = 0.75
 
-burn_time = 15  #s 
+burn_time = 10  #s 
 dt = 0.002 #time step, s
+
 
 #tb, mdot, ms, Ft, s, Cd, dt
 m,h,v,a,F,rho,t = solver(burn_time, mdot, ms, thrust, s, Cd, dt)
