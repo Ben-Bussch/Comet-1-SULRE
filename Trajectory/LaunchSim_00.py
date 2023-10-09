@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 
 def gravity(m, h):
     G = 6.674*10**(-11)
-    M = 5.972*10**(24)
-    R0 = 6371140
+    M = 5.9722*10**(24)
+    R0 = 6375140
     Fg = -G*m*M/((R0+h)**2)
     return(Fg)
 
@@ -49,7 +49,7 @@ def solver(tb, mdot, ms, Ft, s, Cd, dt):
     m0 = mf+ms
     F0 = gravity(m0, h0) + drag(1.225, v0, s, Cd)
     a0 = F0 / m0
-    
+    print(gravity(m0, h0)/m0)
     
     #Arrays
     m = [m0]
