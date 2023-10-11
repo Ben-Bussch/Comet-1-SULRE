@@ -1,0 +1,26 @@
+I've attached a PDF describing the file format of the HDF5, but also here's a little Python snippet I wrote for Sheffield yesterday to demonstrate reading the data:
+
+# Open HDF5
+>>> import h5py
+>>> f = h5py.File("20230703-005.h5")
+# List all channel names
+>>> list(f['channels'])
+['DAU1080_armed', 'DAU1080_seq_start', 'DAU1089_demand', 'DAU1097_armed', 'DAU1097_seq_start', 'EXC1001', 'EXC1002', 'LC190', 'M730', 'M850', 'P600', 'PT100', 'PT140', 'PT141', 'PT142', 'PT520', 'PT521', 'PT522', 'PT730', 'PT731', 'PT732', 'PT850', 'PT851', 'PT852', 'TC140', 'TC141', 'TC731', 'TC732', 'TC851', 'TC852', 'TC890', 'V140', 'V180', 'V181', 'V291', 'V520', 'V521', 'V522', 'V525', 'V526', 'V527', 'V531', 'V730', 'V731', 'V734', 'V851', 'V857', 'V891', 'V893', 'XT852']
+# Channels have attrs like name and units
+>>> f['channels']['P600'].attrs['name']
+'Chamber Pressure'
+# Plot chamber pressure vs time
+>>> import matplotlib.pyplot as plt
+>>> x = f['channels']['P600']['time'][:]
+>>> y = f['channels']['P600']['data'][:]
+>>> plt.plot(x, y)
+[<matplotlib.lines.Line2D object at 0x7f28cd251b50>]
+>>> plt.show()
+# Measure average thrust over the "good bit"
+>>> f['channels']['LC190'].attrs['name']
+'LC190 Thrust'
+>>> np.nanmean(f['channels']['LC190']['data'][114000:126000])
+3393.848748508376
+
+The interesting channels for you are probably LC190 (thrust), M730 (IPA mdot), M850 (N2O mdot), PT852/TC852 (N2O delivery pressure/temperature), and PT732/TC732 (IPA delivery pressure/temperature). The nitrous valve is XT852, the IPA valve is V731 if you want to see the timings.
+
