@@ -1,12 +1,28 @@
 import h5py
 import numpy as np
 import csv
+import os
 
-''' Change file_path accordingly, current setup assumes .h5 file exists in working directory '''
-file_path = "20230704-007-release.h5"
+
+
+
+try: 
+    print('The home directory has been saved as: ', home_directory)
+except:
+    home_directory = os.path.normpath(os.getcwd() + os.sep + os.pardir)    
+    print('Saving the home directory as: ', home_directory)
+    
+burn_10s_directory = home_directory+"\Data\Hot_Fire_10s"
+burn_3s_directory = home_directory+"\Data\Hot_Fire_3s"
+
+data_directory_path = burn_10s_directory #Set to either 3s or 10s burn respectively
 data_path = "groups/air/PT100"
 
-f = h5py.File(file_path, "r")
+os.chdir(data_directory_path)
+
+h5_data = os.listdir()[0]
+
+f = h5py.File(h5_data, "r")
 
 def save_data(time, data, filename):
     time_arr = np.array(time)
@@ -50,7 +66,7 @@ def search(val, search_param, pre=''):
     raise Exception("Group or data does not exist, chech data_path")
 
 
-with h5py.File(file_directory, 'r') as hf:
+with h5py.File(h5_data, 'r') as hf:
     
     h5_tree(hf)
     
@@ -63,7 +79,9 @@ with h5py.File(file_directory, 'r') as hf:
         nxt_group = search(nxt_group, group)
     time = search(nxt_group, "time")
     data = search(nxt_group, "data")
-
+    
+    
+    os.chdir(home_directory+"\Data_Analysis")
     save_data(time, data, gp_fname)
 
     
