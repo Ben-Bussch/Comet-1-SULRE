@@ -109,11 +109,11 @@ def solver(tb, mdot, ms, Ft, s, Cd, dt):
 """Rocket Parameters"""
 thrust = 1500   #N
 mdot = 0.785    #kg/s
-ms = 25         #kg
+ms = 20         #kg
 s = np.pi*(.075**2)
 Cd = 0.75
 
-burn_time = 10.5  #s 
+burn_time = 7  #s 
 dt = 0.002 #time step, s
 
 
