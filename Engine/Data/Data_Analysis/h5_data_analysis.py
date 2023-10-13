@@ -50,7 +50,7 @@ def search(val, search_param, pre=''):
     raise Exception("Group or data does not exist, chech data_path")
 
 
-with h5py.File(file_directory, 'r') as hf:
+with h5py.File(file_path, 'r') as hf:
     
     h5_tree(hf)
     
