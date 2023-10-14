@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Oct 14 18:28:55 2023
+
+@author: Robbie
+Equations
+"""
+import numpy as np
+
+
+"""IPA Properties"""
+
+# Returns the boiling point of IPA in Kelvin at a pressure P in Bar
+# This equation is only valid for boiling point values above 400K and below 500K
+def IPA_Boiling_point(P):
+
+    #Empirical constants
+    A = 4.57795
+    B = 1221.423
+    C = -87.474
+    
+    #calculates log to the base 10 of Pressure
+    log_10_P = np.log10(P)
+    
+    b_p = (B/(A-log_10_P))-C
+    
+    return b_p
