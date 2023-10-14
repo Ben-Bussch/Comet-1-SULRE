@@ -1,10 +1,12 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sat Oct 14 18:28:55 2023
-
 @author: Robbie
+
 Equations
+
+Please try to keep things nice and spaced out, and well commented.
 """
+
+
 import numpy as np
 
 
