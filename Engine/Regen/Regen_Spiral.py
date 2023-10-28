@@ -9,13 +9,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 Domain_z_min = 0 #bottom of throat, mm
-Domain_z_max = 30 #TTop of throat, mm
+Domain_z_max = 20 #TTop of throat, mm
 
 psi1 = 0
-dpsi = 0.05 #Determines spiral resolution
+dpsi = 0.01 #Determines spiral resolution
 
 z1 = 0
-R1 = 0.03*(z1-12)**2 + 8 #inital diameter of spiral, mm
+R1 = 0.03*(z1-10)**2 + 5 #inital diameter of spiral, mm
 print(R1)
 
 x1 = R1/dpsi #Compensate for Scale by dpsi
@@ -32,7 +32,7 @@ r = 1  #radius of piping, mm
 """Spiral Solver"""
 zn = Domain_z_min
 while z1 < Domain_z_max:
-    throat_curve = 0.03*(z1-12)**2 +8 #Expression for spiral
+    throat_curve = 0.03*(z1-10)**2 + 5 #Expression for spiral
     R1 = throat_curve
     R.append(R1)
     theta = np.arccos((np.pi*R1)/(np.sqrt(r**2+(np.pi**2)*R1**2))) #some fancy math i did late at night, dont ask me about it
@@ -80,7 +80,7 @@ ax.set_ylabel("Throat Radius")
 #fig.savefig('Throat_Profile.png', dpi = 120)
 
 
-np.savetxt('xyzSpiral.csv', [p for p in zip(x,y,z)], delimiter=',')
+np.savetxt('xyzSpiral.txt', [p for p in zip(x,y,z)], delimiter=',')
 
 
 
