@@ -50,7 +50,7 @@ def search(val, search_param, pre=''):
         
     raise Exception("Group or data does not exist, chech data_path")
 
-def run(data_path):
+def run(data_path, data_directory_path):
     """reutrns data from h5 file for specific group.
     [0] data value
     [1] time
@@ -61,10 +61,6 @@ def run(data_path):
         home_directory = os.path.normpath(os.getcwd() + os.sep + os.pardir)    
         print('Saving the home directory as: ', home_directory)
         
-    burn_10s_directory = home_directory+"\Data\Hot_Fire_10s"
-    burn_3s_directory = home_directory+"\Data\Hot_Fire_3s"
-    
-    data_directory_path = burn_10s_directory #Set to either 3s or 10s burn respectively
     
     os.chdir(data_directory_path)
     
@@ -93,10 +89,6 @@ def run(data_path):
         #save_data(time, data, gp_fname)
     return data_arr, time_arr
 
-"""
-data_test = run("groups/ipa/M730")
-print(data_test)
-"""
 
 
     
