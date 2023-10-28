@@ -14,12 +14,19 @@ the IPA valve is V731 if you want to see the timings.
 """
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker 
+import os
 import math
 import h5_data_lib 
 
+try: 
+    print('The home directory has been saved as: ', home_directory)
+except:
+    home_directory = os.path.normpath(os.getcwd() + os.sep + os.pardir)    
+    print('Saving the home directory as: ', home_directory)
+
 #groups
 IPA_path = "groups/ipa/"
-N2O_path = "groups/ipa/"
+N2O_path = "groups/n2o/"
 chamber_path = "chamber/"
 general_path = "channels/"
 
@@ -38,12 +45,15 @@ valve_N2O_path = N2O_path+"XT852"
 
 thrust_path = general_path+"LC190"
 
+burn_10s_directory = home_directory+"\Data\Hot_Fire_10s"
+burn_3s_directory = home_directory+"\Data\Hot_Fire_3s"
 
 
 #Example data fetch
-mdot_IPA_data = h5_data_lib.run(mdot_IPA_path)
+mdot_IPA_data = h5_data_lib.run(mdot_IPA_path, burn_10s_directory)
+mdot_N2O_data = h5_data_lib.run(mdot_N2O_path, burn_10s_directory)
 
-thrust_data = h5_data_lib.run(thrust_path)
+thrust_data = h5_data_lib.run(thrust_path, burn_10s_directory)
 
 #10-s burn time data
 burn_start = 1.22
@@ -58,6 +68,13 @@ plt.xlabel("time / s")
 plt.ylabel("Mass Flowrate / kg s-1")
 
 plt.figure(2)
+plt.title("N2O mass Flowrate")
+plt.plot(mdot_N2O_data[1],mdot_N2O_data[0])
+plt.xlabel("time / s")
+plt.ylabel("Mass Flowrate / kg s-1")
+
+
+plt.figure(3)
 plt.title("Thurst")
 plt.plot(thrust_data[1],thrust_data[0])
 plt.xlabel("time / s")
@@ -71,7 +88,7 @@ time = []
 count = 0
 count_10 = 0
 
-
+"""Thrust Time-averaging"""
 while count < len(thrust_data[1]):
     
     thrust_temp +=  thrust_data[0][count]
@@ -91,23 +108,35 @@ plt.ylabel("Thrust / N")
 plt.grid()
 #plt.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
-mdot_sum = 0
-count_avg = 0
+mdot_IPA_sum = 0
+mdot_N2O_sum = 0
+count_IPA_avg = 0
+count_N2O_avg = 0
 count = 0
 
+
+"""Equalibirum mdot"""
 while count < len(mdot_IPA_data[1]):
     t = mdot_IPA_data[1][count]
-    if  t > 1.17 and t < 10.17 and not math.isnan(mdot_IPA_data[0][count]):
-        mdot_temp =  mdot_IPA_data[0][count]
-        mdot_sum += mdot_temp
+    if  t > 1.70 and t < 10.00: 
+        if not math.isnan(mdot_IPA_data[0][count]):
+            mdot_IPA_temp =  mdot_IPA_data[0][count]
+            mdot_IPA_sum += mdot_IPA_temp
+            count_IPA_avg += 1
+        if not math.isnan(mdot_N2O_data[0][count]):
+            mdot_N2O_temp =  mdot_N2O_data[0][count]
+            mdot_N2O_sum += mdot_N2O_temp
+            count_N2O_avg += 1
                 
-        count_avg += 1
+        
     count += 1
 
-print(count_avg)
-mdot_avg = mdot_sum/count_avg
+mdot_IPA_avg = mdot_IPA_sum/count_IPA_avg
+mdot_N2O_avg = mdot_N2O_sum/count_N2O_avg
 
-print(mdot_avg)
+print("IPA average mass flowrate: ",mdot_IPA_avg, "kg/s")
+print("IPA average mass flowrate: ", mdot_N2O_avg, "kg/s")
+print("Total average Flowrate: ", mdot_IPA_avg+mdot_N2O_avg)
 
 #print(mdot_IPA_data[0])
 #plt.plot(mdot_IPA_data[1],mdot_IPA_data[0])
