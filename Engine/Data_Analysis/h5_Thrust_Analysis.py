@@ -46,8 +46,8 @@ p_tank_IPA_path = IPA_path+"PT732"
 p_tank_N2O_path = N2O_path+"PT851"
 p_tank_N2_path = N2_path+"PT521"
 
-t_inlet_IPA_path = IPA_path+"TC852"
-t_inlet_N2O_path = N2O_path+"TC732"
+t_inlet_IPA_path = IPA_path+"TC732"
+t_inlet_N2O_path = N2O_path+"TC852"
 
 valve_IPA_path = IPA_path+"V731"
 valve_N2O_path = N2O_path+"XT852"
@@ -75,6 +75,9 @@ thrust_data = h5_data_lib.run(thrust_path, burn_10s_directory)
 n2_p_data = h5_data_lib.run(p_inlet_N2_path, burn_10s_directory)
 N2O_p_data = h5_data_lib.run(p_inlet_N2O_path , burn_10s_directory)
 N2O_tank_p_data= h5_data_lib.run(p_tank_N2O_path , burn_10s_directory)
+
+t_IPA_inlet = h5_data_lib.run(t_inlet_IPA_path, burn_10s_directory)
+t_N2O_inlet = h5_data_lib.run(t_inlet_N2O_path, burn_10s_directory)
 
 
 
@@ -125,6 +128,15 @@ plt.xlabel("time / s")
 plt.ylabel("Pressure / Bars")
 plt.grid()
 
+
+plt.figure(3)
+plt.title("Inlet Tempuratures")
+plt.plot(t_IPA_inlet[1],t_IPA_inlet[0], label ="IPA Inlet Temperature")
+plt.plot(t_N2O_inlet[1],t_N2O_inlet[0], label ="N2O Inlet Temperature")
+plt.xlabel("time / s")
+plt.ylabel("Tempurature / Degrees Celcius")
+plt.legend()
+plt.grid()
 plt.plot()
 
 
