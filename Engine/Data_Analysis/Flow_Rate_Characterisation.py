@@ -74,7 +74,7 @@ plt.xlabel("time / s")
 plt.ylabel("Mass Flowrate / kg s-1")
 
 
-plt.figure(3)
+plt.figure(5)
 plt.title("Thurst")
 plt.plot(thrust_data[1],thrust_data[0])
 plt.xlabel("time / s")
@@ -82,30 +82,8 @@ plt.ylabel("Thrust / N")
 
 
 
-thrust_temp = 0
-thrust = []
-time = []
-count = 0
-count_10 = 0
 
-"""Thrust Time-averaging"""
-while count < len(thrust_data[1]):
-    
-    thrust_temp +=  thrust_data[0][count]
-    if  count_10  == count:
-        thrust_10_avg = thrust_temp/100
-        thrust.append(thrust_10_avg)
-        time.append(thrust_data[1][count_10])
-        thrust_temp = 0
-        count_10 += 100
-    count += 1
-    
-plt.figure(3)
-plt.title("Thurst, 0.1 sec avg")
-plt.plot(time,thrust)
-plt.xlabel("time / s")
-plt.ylabel("Thrust / N") 
-plt.grid()
+
 #plt.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 mdot_IPA_sum = 0
@@ -114,11 +92,14 @@ count_IPA_avg = 0
 count_N2O_avg = 0
 count = 0
 
+mdot_fe = []
+mdot_oe = []
+time_e = []
 
 """Equalibirum mdot"""
 while count < len(mdot_IPA_data[1]):
     t = mdot_IPA_data[1][count]
-    if  t > 1.70 and t < 10.00: 
+    if  t > 2.00 and t < 10.00: 
         if not math.isnan(mdot_IPA_data[0][count]):
             mdot_IPA_temp =  mdot_IPA_data[0][count]
             mdot_IPA_sum += mdot_IPA_temp
@@ -127,7 +108,10 @@ while count < len(mdot_IPA_data[1]):
             mdot_N2O_temp =  mdot_N2O_data[0][count]
             mdot_N2O_sum += mdot_N2O_temp
             count_N2O_avg += 1
-                
+        mdot_fe.append(mdot_IPA_temp)
+        mdot_oe.append(mdot_N2O_temp)
+        time_e.append(mdot_N2O_data[1][count])
+        
         
     count += 1
 
@@ -140,11 +124,94 @@ print("Total average Flowrate: ", mdot_IPA_avg+mdot_N2O_avg)
 
 #print(mdot_IPA_data[0])
 #plt.plot(mdot_IPA_data[1],mdot_IPA_data[0])
-plt.plot()
 
 
+
+Total_mass_flow = [i + j for i, j in zip(mdot_oe,mdot_fe)]
+#print(Total_mass_flow )
+"""plt.figure(4)
+plt.title("Mass Flows ")
+plt.plot(time_e, Total_mass_flow)
+plt.xlabel("time / s")
+plt.ylabel("Mass Flowrate [kg / s]")"""
+
+OF = [i / j for i, j in zip(mdot_oe,mdot_fe)]
+"""
+plt.figure(3)
+plt.title("OF ratio")
+plt.plot(time_e, OF)
+plt.xlabel("time / s")
+plt.ylabel("O/F ratio")
+"""
+
+thrust_temp = 0
+thrust = []
+OF_avg = []
+mf_avg = []
+time = []
+count = 0
+count_10 = 0
+
+OF_temp = 0
+total_mass_flow_temp = 0
+time_eavg = []
+
+"""mdot, Time-averaging"""
+while count < len(OF):
+    OF_temp += OF[count]
+    total_mass_flow_temp  += Total_mass_flow[count]
+    if  count_10  == count:
+        OF_10_avg = OF_temp/300
+        OF_avg.append(OF_10_avg)
+       
+        mass_flow_avg = total_mass_flow_temp/300
+        mf_avg.append(mass_flow_avg)
         
+        time_eavg.append(time_e[count_10])
+        OF_temp = 0
+        total_mass_flow_temp = 0
+        
+        count_10 += 300
+    count += 1
+    
+print(OF_avg[0], OF_avg[1])
+plt.figure(3)
+plt.title("Time Averaged OF ratio")
+plt.plot(time_eavg, OF_avg)
+plt.xlabel("time / s")
+plt.ylabel("O/F ratio")
+plt.grid()
 
+plt.figure(4)
+plt.title("Time Averaged Mass Flows")
+plt.plot(time_eavg,  mf_avg)
+plt.xlabel("time / s")
+plt.ylabel("Mass Flowrate [kg / s]")
+plt.grid()
+
+
+"""Thrust Time-averaging"""
+while count < len(thrust_data[1]):
+    
+    thrust_temp +=  thrust_data[0][count]
+    #OF_temp += 
+    if  count_10  == count:
+        thrust_10_avg = thrust_temp/100
+        thrust.append(thrust_10_avg)
+        time.append(thrust_data[1][count_10])
+        thrust_temp = 0
+        #OF_avg = 
+        count_10 += 100
+    count += 1
+    
+plt.figure(5)
+plt.title("Thurst, 0.1 sec avg")
+plt.plot(time,thrust)
+plt.xlabel("time / s")
+plt.ylabel("Thrust / N") 
+plt.grid()
+
+plt.plot()
 
 
 
