@@ -111,7 +111,7 @@ thrust = 1493   #N
 mdot = 0.797    #kg/s
 ms = 20         #kg
 s = np.pi*(.075**2)
-Cd = 0.75
+Cd = 0.55
 
 burn_time = 8  #s 
 dt = 0.001 #time step, s
@@ -176,6 +176,16 @@ plt.ylabel("Atmospheric Density [kg/m^3]")
 
 plt.savefig('Density_vs_height.png', dpi=300)
 
+plt.figure(6)
+plt.clf()
+
+plt.plot(t, m)
+
+plt.grid(1)
+plt.xlabel("Time [s]]")
+plt.ylabel("Rocket Mass")
+plt.ylim(ymin=0) 
+plt.savefig('Mass_vs_time.png', dpi=300)
 
     
 
