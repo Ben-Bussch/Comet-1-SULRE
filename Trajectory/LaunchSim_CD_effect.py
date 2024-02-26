@@ -150,13 +150,14 @@ def solver(tb, mdot, ms, Ft, s, Cd, theta0, dt):
 """Rocket Parameters"""
 thrust = 1493   #N
 mdot = 0.797    #kg/s
-ms = 20         #kg
-s = np.pi*(.075**2)
-Cd1 = 0.75
-Cd2 = 0.575
-Cd3 = 0.4
+ms = 25         #kg
+Outer_Diameter =  160 #mm (very important value to keep updated!)
+s = np.pi*((Outer_Diameter/2000)**2) 
+Cd1 = 0.38
+Cd2 = 0.48
+Cd3 = 0.58
 
-burn_time = 6.5  #s 
+burn_time = 7  #s 
 lanch_angle_deg = 84 #degrees from horizontal
 dt = 0.001 #time step, s
 
@@ -167,31 +168,34 @@ m, h1, d1, vx, vy, v1, ax, ay, Fx, Fy, rho, theta, t1= solver(burn_time, mdot, m
 m, h2, d2, vx, vy, v2, ax, ay, Fx, Fy, rho, theta, t2= solver(burn_time, mdot, ms, thrust, s, Cd2, lanch_angle_rad, dt)
 m, h3, d3, vx, vy, v3, ax, ay, Fx, Fy, rho, theta, t3= solver(burn_time, mdot, ms, thrust, s, Cd3, lanch_angle_rad, dt)
 
+
 plt.figure(1)
 plt.clf()
 
-plt.plot(t1, v1, label = "vmag CD = 0.750")
-plt.plot(t2, v2, label = "vmag CD = 0.575")
-plt.plot(t3, v3, label = "vmag CD = 0.400")
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time))
+plt.plot(t1, v1, label = "vmag CD = "+str(Cd1))
+plt.plot(t2, v2, label = "vmag CD = "+str(Cd2))
+plt.plot(t3, v3, label = "vmag CD = "+str(Cd3))
 
 plt.grid(1)
 plt.xlabel("time [s]")
 plt.ylabel("Velocity [m/s]")
 plt.legend()
-plt.savefig('Velocity_vs_time.png', dpi=300)
+plt.savefig('Velocity_vs_time_CDs.png', dpi=300)
 
 
 plt.figure(6)
 plt.clf()
-plt.plot(d1, h1, label = "CD = 0.750")
-plt.plot(d2, h2, label = "CD = 0.575")
-plt.plot(d3, h3, label = "CD = 0.400")
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time))
+plt.plot(d1, h1, label = "trajectory CD = "+str(Cd1))
+plt.plot(d2, h2, label = "trajectory CD = "+str(Cd2))
+plt.plot(d3, h3, label = "trajectory CD = "+str(Cd3))
 plt.grid(1)
 plt.xlabel("Horizontal Distance (x) [m]")
 plt.ylabel("Vertical Distance (y) [m]")
 plt.ylim(ymin=0) 
 plt.legend()
-plt.savefig('Height_vs_Distance.png', dpi=300)
+plt.savefig('Height_vs_Distance_CDs.png', dpi=300)
 
 
 
