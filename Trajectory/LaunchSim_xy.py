@@ -137,7 +137,7 @@ def solver(tb, mdot, ms, Ft, s, Cd, theta0, dt):
             """Saves rail exit velocity"""    
             vrail = v[count]
             rail = False
-            print("v: ", v[count], "h: ", h[count])
+            print("v launchrail: ", v[count], "h from ground: ", h[count]-h0 )
         
         #print("Time: ",t," Force: ",Fsum," Acc: ", a1," v: ", v1, " h: ", h1, " Mass: ", m1 )
         run = terminate(h[count+1], h[count], h0, dt)
@@ -150,11 +150,12 @@ def solver(tb, mdot, ms, Ft, s, Cd, theta0, dt):
 """Rocket Parameters"""
 thrust = 1493   #N
 mdot = 0.797    #kg/s
-ms = 20         #kg
-s = np.pi*(.075**2)
-Cd = 0.65
+ms = 25         #kg
+Outer_Diameter =  160 #mm (very important value to keep updated!)
+s = np.pi*((Outer_Diameter/2000)**2) 
+Cd = 0.38
 
-burn_time = 6.5  #s 
+burn_time = 6.5 #s 
 lanch_angle_deg = 84 #degrees from horizontal
 dt = 0.001 #time step, s
 
@@ -171,7 +172,7 @@ for i in range(len(t)):
 
 plt.figure(1)
 plt.clf()
-
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time) +" CD: "+str(Cd))
 plt.plot(t, v, label = "vmag")
 plt.plot(t, vx, label = "vx")
 plt.plot(t, vy, label = "vy")
@@ -180,10 +181,11 @@ plt.grid(1)
 plt.xlabel("time [s]")
 plt.ylabel("Velocity [m/s]")
 plt.legend()
-plt.savefig('Velocit_vs_time.png', dpi=300)
+plt.savefig('Velocity_vs_time.png', dpi=300)
 
 plt.figure(2)
 plt.clf()
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time) +" CD: "+str(Cd))
 
 plt.plot(t, F, label = "Fmag")
 plt.plot(t, Fx, label = "Fx")
@@ -197,6 +199,7 @@ plt.savefig('Force_vs_time.png', dpi=300)
 
 plt.figure(3)
 plt.clf()
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time) +" CD: "+str(Cd))
 
 plt.plot(t, h, label = "Height")
 plt.plot(t, d, label = "Distance")
@@ -209,6 +212,7 @@ plt.savefig('Height_vs_time.png', dpi=300)
 
 plt.figure(4)
 plt.clf()
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time) +" CD: "+str(Cd))
 
 plt.plot(t, a, label = "amag")
 plt.plot(t, ax, label = "ax")
@@ -218,11 +222,12 @@ plt.grid(1)
 plt.xlabel("time [s]")
 plt.ylabel("Acceleration [m/s^2]")
 plt.legend()
-plt.savefig('Accelerationy_vs_time.png', dpi=300)
+plt.savefig('Acceleration_vs_time.png', dpi=300)
 
 
 plt.figure(5)
 plt.clf()
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time) +" CD: "+str(Cd))
 
 plt.plot(h, rho)
 
@@ -235,6 +240,8 @@ plt.savefig('Density_vs_height.png', dpi=300)
 
 plt.figure(6)
 plt.clf()
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time) +" CD: "+str(Cd))
+
 plt.plot(d, h)
 plt.grid(1)
 plt.xlabel("Horizontal Distance (x) [m]")
@@ -244,6 +251,8 @@ plt.savefig('Height_vs_Distance.png', dpi=300)
 
 plt.figure(7)
 plt.clf()
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time) +" CD: "+str(Cd))
+
 plt.plot(t, np.degrees(theta))
 plt.grid(1)
 plt.xlabel("Time [s]")
@@ -253,9 +262,9 @@ plt.savefig('Angle_vs_time.png', dpi=300)
 
 plt.figure(8)
 plt.clf()
+plt.title("Ms (kg): "+str(ms)+" Diameter (mm): "+str(Outer_Diameter) +" Burn Time: "+str(burn_time) +" CD: "+str(Cd))
 
 plt.plot(t, m)
-
 plt.grid(1)
 plt.xlabel("Time [s]")
 plt.ylabel("Rocket Mass")
