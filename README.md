@@ -1,2 +1,2 @@
 # Comet-1
- Main github for Southampton University's Liquid Rocket Engine's team Comet 1 Rocket 
+ Main github for the Southampton University Liquid Rocket Engine team's Comet 1 Rocket 
