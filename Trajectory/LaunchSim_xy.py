@@ -155,7 +155,7 @@ Outer_Diameter =  150 #mm (very important value to keep updated!)
 s = np.pi*((Outer_Diameter/2000)**2) 
 Cd = 0.4
 
-burn_time = 6.7 #s 
+burn_time = 6.5 #s 
 lanch_angle_deg = 84 #degrees from horizontal
 dt = 0.001 #time step, s
 
