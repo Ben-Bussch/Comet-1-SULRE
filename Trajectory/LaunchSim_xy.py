@@ -150,7 +150,7 @@ def solver(tb, mdot, ms, Ft, s, Cd, theta0, dt):
 """Rocket Parameters"""
 thrust = 1493   #N
 mdot = 0.797    #kg/s
-ms = 26.5         #kg
+ms = 25.6         #kg
 Outer_Diameter =  150 #mm (very important value to keep updated!)
 s = np.pi*((Outer_Diameter/2000)**2) 
 Cd = 0.4
