@@ -43,8 +43,8 @@ mdot_N2O_path = N2O_path+"M850"
 p_inlet_IPA_path = IPA_path+"PT732"
 p_inlet_N2O_path = N2O_path+"PT852"
 
-t_inlet_IPA_path = IPA_path+"TC732"
-t_inlet_N2O_path = N2O_path+"TC852"
+t_inlet_IPA_path = IPA_path+"TC852"
+t_inlet_N2O_path = N2O_path+"TC732"
 
 valve_IPA_path = IPA_path+"XT731"
 
@@ -52,7 +52,7 @@ valve_N2O_path = N2O_path+"XT852"
 
 valve_N2_path = N2_path + " XT852"
 
-chamber_pt = pt_path + "PT601"
+chamber_pt = pt_path + "PT730"
 
 thrust_path = general_path+"LC190"
 
@@ -72,21 +72,11 @@ IPA_path+"XT731" potential IPA valve
 burn_directory = home_directory+"\Data\Hot_Fire"
 
 
-
-
-
-
 #Example data fetch
 thrust_data = h5_data_lib.run(thrust_path, burn_directory)
 
-p_inlet_IPA = h5_data_lib.run(p_inlet_IPA_path , burn_directory)
-p_inlet_N2O = h5_data_lib.run(p_inlet_N2O_path , burn_directory)
-
-IPA_valve = h5_data_lib.run(valve_IPA_path, burn_directory)
-N2O_valve = h5_data_lib.run(valve_N2O_path, burn_directory)
-
-t_IPA = h5_data_lib.run(t_inlet_IPA_path, burn_directory)
-t_N2O = h5_data_lib.run(t_inlet_N2O_path, burn_directory)
+mdot_inlet_IPA = h5_data_lib.run(mdot_IPA_path , burn_directory)
+mdot_inlet_N2O = h5_data_lib.run(mdot_N2O_path , burn_directory)
 
 
 p_chamber = h5_data_lib.run(chamber_pt , burn_directory)
@@ -101,33 +91,17 @@ plt.ylabel("Thrust / N")
 plt.grid()"""
 
 plt.figure(1)
-plt.title("Pressures")
-plt.plot(p_inlet_IPA[1],p_inlet_IPA[0], label = "IPA 24")
-plt.plot(p_inlet_N2O[1],p_inlet_N2O[0], label = "N2O 24")
-plt.plot(p_chamber[1],p_chamber[0], label = "Chamber Pressure")
+plt.title("Mass Flowrate")
+plt.plot(mdot_inlet_IPA[1],mdot_inlet_IPA[0], label = "IPA 24")
+plt.plot(mdot_inlet_N2O [1],mdot_inlet_N2O [0], label = "N2O 24")
 plt.xlabel("time / s")
-plt.ylabel("Pressure / Bar")
+plt.ylabel("Mass Flowrate / kg/s")
 plt.legend()
 plt.grid()
 
-plt.figure(2)
-plt.title("Valves")
-plt.plot(IPA_valve[1],IPA_valve[0], label = "IPA Valve 24")
-plt.plot(N2O_valve[1],N2O_valve[0], label = "N2O Valve 24")
-plt.xlabel("time / s")
-plt.ylabel("Valve Setting / 0-1")
-plt.legend()
-plt.grid()
+OF = [i / j for i, j in zip(mdot_inlet_N2O,mdot_inlet_IPA)]
 
 
-plt.figure(3)
-plt.title("Tempuratures")
-plt.plot(t_IPA[1],t_IPA[0], label = "IPA temp")
-plt.plot(t_N2O[1],t_N2O[0], label = "N2O temp")
-plt.xlabel("time / s")
-plt.ylabel("Tempurature / K")
-plt.legend()
-plt.grid()
 
 plt.plot()
 
