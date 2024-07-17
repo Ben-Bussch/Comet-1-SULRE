@@ -50,9 +50,18 @@ valve_IPA_path = IPA_path+"V731"
 valve_N2O_path = N2O_path+"XT852"
 valve_N2_path = N2_path + " XT852"
 
-chamber_pt = pt_path + "PT100"
+chamber_pt = pt_path + "PT601"
 
 thrust_path = general_path+"LC190"
+
+
+"""Notes
+pt_path + "PT521" potential nox Pt path
+pt_path + "PT522" potential IPA Pt path
+
+"""
+
+
 
 
 #Data Paths
@@ -84,6 +93,7 @@ plt.figure(2)
 plt.title("Pressures")
 plt.plot(p_inlet_IPA[1],p_inlet_IPA[0], label = "IPA")
 plt.plot(p_inlet_N2O[1],p_inlet_N2O[0], label = "N2O")
+plt.plot(p_chamber[1],p_chamber[0], label = "Chamber")
 plt.xlabel("time / s")
 plt.ylabel("Pressure / Bar")
 plt.legend()
