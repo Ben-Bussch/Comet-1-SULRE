@@ -32,6 +32,9 @@ N2_path = "groups/n2/"
 chamber_path = "chamber/"
 general_path = "channels/"
 
+pt_path = "groups/pt/"
+
+
 
 #File Paths
 mdot_IPA_path = IPA_path+"M730"
@@ -43,44 +46,75 @@ p_inlet_N2O_path = N2O_path+"PT852"
 t_inlet_IPA_path = IPA_path+"TC852"
 t_inlet_N2O_path = N2O_path+"TC732"
 
-valve_IPA_path = IPA_path+"V731"
+valve_IPA_path = IPA_path+"XT731"
+
 valve_N2O_path = N2O_path+"XT852"
+
 valve_N2_path = N2_path + " XT852"
+
+chamber_pt = pt_path + "PT730"
 
 thrust_path = general_path+"LC190"
 
 
+"""Notes
+pt_path + "PT521" potential nox Pt path
+pt_path + "PT522" IPA tank Pt path
+pt_path + "PT601" chamber pressure 1
+pt_path + "PT730" IPA 2 path
+IPA_path+"XT731" potential IPA valve
+"""
+
+
+
+
 #Data Paths
-burn_10s_directory = home_directory+"\Data\Hot_Fire_10s"
-burn_3s_directory = home_directory+"\Data\Hot_Fire_3s"
+burn_directory = home_directory+"\Data\Hot_Fire"
 
 
-#10-s burn time data
-burn_start, i_start = 0.60, 106001 #seconds, then indicie of time
-burn_end, i_end = 12.40, 224001
 
-#roughly the times for the linear thrust data:
-burn_eq_start, i_start_eq = 1.70, 117001
-burn_eq_end, i_end_eq = 10.0, 200001
+
 
 
 #Example data fetch
-IPA_pressure = h5_data_lib.run(p_inlet_IPA_path, burn_10s_directory)
-IPA_valve = h5_data_lib.run(valve_IPA_path, burn_10s_directory)
+thrust_data = h5_data_lib.run(thrust_path, burn_directory)
 
-N2O_pressure = h5_data_lib.run(p_inlet_N2O_path, burn_10s_directory)
-N2O_valve = h5_data_lib.run(valve_N2O_path, burn_10s_directory)
+p_inlet_IPA = h5_data_lib.run(p_inlet_IPA_path , burn_directory)
+p_inlet_N2O = h5_data_lib.run(p_inlet_N2O_path , burn_directory)
+
+IPA_valve = h5_data_lib.run(valve_IPA_path, burn_directory)
+N2O_valve = h5_data_lib.run(valve_N2O_path, burn_directory)
+
+
+p_chamber = h5_data_lib.run(chamber_pt , burn_directory)
+
+
+"""
+plt.figure(1)
+plt.title("Thurst")
+plt.plot(thrust_data[1],thrust_data[0])
+plt.xlabel("time / s")
+plt.ylabel("Thrust / N")
+plt.grid()"""
 
 plt.figure(1)
-plt.title("Pressure")
-plt.plot(IPA_pressure[1],IPA_pressure[0], label = "IPA Pressure")
-plt.plot(IPA_valve[1],IPA_valve[0], label = "IPA Valve")
-plt.plot(N2O_pressure[1],N2O_pressure[0], label = "N2O Pressure")
-plt.plot(N2O_valve[1],N2O_valve[0], label = "N2O Valve")
+plt.title("Pressures")
+plt.plot(p_inlet_IPA[1],p_inlet_IPA[0], label = "IPA 24")
+plt.plot(p_inlet_N2O[1],p_inlet_N2O[0], label = "N2O 24")
 plt.xlabel("time / s")
-plt.ylabel("Pressure / Bars")
+plt.ylabel("Pressure / Bar")
 plt.legend()
 plt.grid()
+
+plt.figure(2)
+plt.title("Valves")
+plt.plot(IPA_valve[1],IPA_valve[0], label = "IPA Valve 24")
+plt.plot(N2O_valve[1],N2O_valve[0], label = "N2O Valve 24")
+plt.xlabel("time / s")
+plt.ylabel("Valve Setting / 0-1")
+plt.legend()
+plt.grid()
+
 
 plt.plot()
 

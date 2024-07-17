@@ -50,15 +50,16 @@ valve_IPA_path = IPA_path+"V731"
 valve_N2O_path = N2O_path+"XT852"
 valve_N2_path = N2_path + " XT852"
 
-chamber_pt = pt_path + "PT601"
+chamber_pt = pt_path + "PT730"
 
 thrust_path = general_path+"LC190"
 
 
 """Notes
 pt_path + "PT521" potential nox Pt path
-pt_path + "PT522" potential IPA Pt path
-
+pt_path + "PT522" IPA tank Pt path
+pt_path + "PT601" chamber pressure 1
+pt_path + "PT730" IPA 2 path
 """
 
 
@@ -81,19 +82,19 @@ p_inlet_N2O = h5_data_lib.run(p_inlet_N2O_path , burn_directory)
 p_chamber = h5_data_lib.run(chamber_pt , burn_directory)
 
 
-
+"""
 plt.figure(1)
 plt.title("Thurst")
 plt.plot(thrust_data[1],thrust_data[0])
 plt.xlabel("time / s")
 plt.ylabel("Thrust / N")
-plt.grid()
+plt.grid()"""
 
-plt.figure(2)
+plt.figure(1)
 plt.title("Pressures")
-plt.plot(p_inlet_IPA[1],p_inlet_IPA[0], label = "IPA")
-plt.plot(p_inlet_N2O[1],p_inlet_N2O[0], label = "N2O")
-plt.plot(p_chamber[1],p_chamber[0], label = "Chamber")
+plt.plot(p_inlet_IPA[1],p_inlet_IPA[0], label = "IPA 24")
+plt.plot(p_inlet_N2O[1],p_inlet_N2O[0], label = "N2O 24")
+plt.plot(p_chamber[1],p_chamber[0], label = "Chamber 24")
 plt.xlabel("time / s")
 plt.ylabel("Pressure / Bar")
 plt.legend()
