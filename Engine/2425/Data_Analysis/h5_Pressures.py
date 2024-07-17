@@ -101,13 +101,13 @@ plt.ylabel("Thrust / N")
 plt.grid()"""
 
 plt.figure(1)
-plt.title("Pressures")
+plt.title("Pressures", fontsize = 30)
 plt.plot(p_inlet_IPA[1],p_inlet_IPA[0], label = "IPA 24")
 plt.plot(p_inlet_N2O[1],p_inlet_N2O[0], label = "N2O 24")
 plt.plot(p_chamber[1],p_chamber[0], label = "Chamber Pressure")
-plt.xlabel("time / s")
-plt.ylabel("Pressure / Bar")
-plt.legend()
+plt.xlabel("time / s", fontsize = 30)
+plt.ylabel("Pressure / Bar", fontsize = 30)
+plt.legend(fontsize = 20)
 plt.grid()
 
 plt.figure(2)
