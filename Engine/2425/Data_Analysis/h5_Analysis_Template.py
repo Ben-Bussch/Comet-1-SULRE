@@ -32,6 +32,8 @@ N2_path = "groups/n2/"
 chamber_path = "chamber/"
 general_path = "channels/"
 
+pt_path = "groups/pt/"
+
 
 
 #File Paths
@@ -47,6 +49,8 @@ t_inlet_N2O_path = N2O_path+"TC732"
 valve_IPA_path = IPA_path+"V731"
 valve_N2O_path = N2O_path+"XT852"
 valve_N2_path = N2_path + " XT852"
+
+chamber_pt = pt_path + "PT100"
 
 thrust_path = general_path+"LC190"
 
@@ -64,7 +68,8 @@ thrust_data = h5_data_lib.run(thrust_path, burn_directory)
 
 p_inlet_IPA = h5_data_lib.run(p_inlet_IPA_path , burn_directory)
 p_inlet_N2O = h5_data_lib.run(p_inlet_N2O_path , burn_directory)
-p_chamber = h5_data_lib.run(p_inlet_N2O_path , burn_directory)
+
+p_chamber = h5_data_lib.run(chamber_pt , burn_directory)
 
 
 
