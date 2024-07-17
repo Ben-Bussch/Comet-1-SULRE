@@ -82,10 +82,11 @@ plt.grid()
 
 plt.figure(2)
 plt.title("Pressures")
-plt.plot(p_inlet_IPA[1],p_inlet_IPA[0])
-plt.plot(p_inlet_N2O[1],p_inlet_N2O[0])
+plt.plot(p_inlet_IPA[1],p_inlet_IPA[0], label = "IPA")
+plt.plot(p_inlet_N2O[1],p_inlet_N2O[0], label = "N2O")
 plt.xlabel("time / s")
-plt.ylabel("Thrust / Bar")
+plt.ylabel("Pressure / Bar")
+plt.legend()
 plt.grid()
 
 
