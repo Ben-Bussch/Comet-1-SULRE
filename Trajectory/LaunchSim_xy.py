@@ -148,14 +148,14 @@ def solver(tb, mdot, ms, Ft, s, Cd, theta0, dt):
     return m, h, d, vx, vy, v, ax, ay, Fx, Fy, rho,theta, time
         
 """Rocket Parameters"""
-thrust = 1493   #N
-mdot = 0.797    #kg/s
-ms = 25.6         #kg
+thrust = 1500*2.5/1.5   #N
+mdot = 0.797*2.5/1.5    #kg/s
+ms = 28         #kg
 Outer_Diameter =  150 #mm (very important value to keep updated!)
 s = np.pi*((Outer_Diameter/2000)**2) 
 Cd = 0.4
 
-burn_time = 6.5 #s 
+burn_time = 4 #s 
 lanch_angle_deg = 84 #degrees from horizontal
 dt = 0.001 #time step, s
 
