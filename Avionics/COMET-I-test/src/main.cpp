@@ -2,6 +2,7 @@
 #include <Servo.h>
 #include <Adafruit_INA219.h>
 #include "SD.h"
+#include <Wire.h>
 //#include <SoftwareSerial.h>
 
 //Servos
@@ -32,8 +33,8 @@ Adafruit_INA219 ina219A;
 Adafruit_INA219 ina219B;
 Adafruit_INA219 ina219C;
 Adafruit_INA219 ina219D;
-float ina219intercept = -23.194;
-float ina219gradient = 6.116;
+float ina219intercept = -25.4;
+float ina219gradient = 5.85;
 
 
 void SetupCurrentSensor()
@@ -69,30 +70,34 @@ float CurrentToPressure(float current, float intercept, float grad)
 void ReadPressureTransducer()
 {
   //Serial.println("S");
-  float currentA = -1 * ina219A.getCurrent_mA();
+  float currentmA = ina219A.getCurrent_mA();
+  //float currentA = 1 * ina219A.getCurrent_mA();
   //Serial.println("GotCurrent");
   // float currentB = ina219B.getCurrent_mA();
   // float currentC = ina219C.getCurrent_mA();
   // float currentD = ina219D.getCurrent_mA();
-
-  Serial.println(CurrentToPressure(currentA, ina219intercept, ina219gradient));
+  float pressure_reading = CurrentToPressure(currentmA, ina219intercept, ina219gradient);
+  Serial.println(pressure_reading);
+  
   //Serial.print("A");Serial.println(currentA);
   // data1.pressure2 = CurrentToPressure(currentB, ina219BOffset, ina219BScale);
   // data1.pressure3 = CurrentToPressure(currentC, ina219COffset, ina219CScale);
   // data1.pressure4 = CurrentToPressure(currentD, ina219DOffset, ina219DScale);
 }
 
+
 void setup()
 {
-
-  pinMode(LED_BUILTIN, OUTPUT);
   // turn the LED on (HIGH is the voltage level)
+  pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
 
-
-  Serial.begin(9600); 
+  Serial.begin(115200);
+  while (!Serial && millis() < 5000) {}
+  //Serial.begin(9600); 
   Serial.println("Hello from Teensy 4.1!");
-  // initialize LED digital pin as an output.
+
+  SetupCurrentSensor();
   
   
 
@@ -114,6 +119,7 @@ void fireSequence()
   FillServo.writeMicroseconds(FillStartPPM);
   delay(5000); 
   NoxEngServo.writeMicroseconds(NoxEngStartPPM+NoxdeltaPPM);
+  delay(100); 
   IPAEngServo.writeMicroseconds(IPAEngStartPPM+IPAdeltaPPM);
 
 }
@@ -137,21 +143,21 @@ void fillSequence()
 void loop()
 {
   ReadPressureTransducer();
+  //Serial.println("Hello from Teensy 4.1!");
   
-  /*
+  
     if(count < 1){
     delay(1000);
-    //fillSequence();
-    FillServo.writeMicroseconds(FillStartPPM);
-    delay(60000);
-    //fireSequence();
-    FillServo.writeMicroseconds(FillStartPPM+FilldeltaPPM);
+    fillSequence();
+    //FillServo.writeMicroseconds(FillStartPPM);
+    delay(20000);
+    fireSequence();
+    //FillServo.writeMicroseconds(FillStartPPM+FilldeltaPPM);
     
     count ++;
   }
-  */ 
-
   
+
   
 
 }
