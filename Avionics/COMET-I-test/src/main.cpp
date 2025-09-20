@@ -25,6 +25,7 @@ int FilldeltaPPM = 750;
 int PPMpos = 0; 
 int count = 0;
 
+
 //SD
 const int mchipSelect = BUILTIN_SDCARD;
 
@@ -33,8 +34,10 @@ Adafruit_INA219 ina219A;
 Adafruit_INA219 ina219B;
 Adafruit_INA219 ina219C;
 Adafruit_INA219 ina219D;
-float ina219intercept = -25.4;
-float ina219gradient = 5.85;
+float ina219intercept = -23.9;
+float ina219gradient = 4.9;
+float p_max = 0;
+float p_avg = 0;
 
 
 void SetupCurrentSensor()
@@ -67,7 +70,7 @@ float CurrentToPressure(float current, float intercept, float grad)
   return current * grad + intercept;
 }
 
-void ReadPressureTransducer()
+float ReadPressureTransducer()
 {
   //Serial.println("S");
   float currentmA = ina219A.getCurrent_mA();
@@ -76,13 +79,14 @@ void ReadPressureTransducer()
   // float currentB = ina219B.getCurrent_mA();
   // float currentC = ina219C.getCurrent_mA();
   // float currentD = ina219D.getCurrent_mA();
-  float pressure_reading = CurrentToPressure(currentmA, ina219intercept, ina219gradient);
-  Serial.println(pressure_reading);
-  
   //Serial.print("A");Serial.println(currentA);
   // data1.pressure2 = CurrentToPressure(currentB, ina219BOffset, ina219BScale);
   // data1.pressure3 = CurrentToPressure(currentC, ina219COffset, ina219CScale);
   // data1.pressure4 = CurrentToPressure(currentD, ina219DOffset, ina219DScale);
+  float pressure_reading = CurrentToPressure(currentmA, ina219intercept, ina219gradient);
+  
+  return currentmA;
+
 }
 
 
@@ -142,10 +146,24 @@ void fillSequence()
 
 void loop()
 {
-  ReadPressureTransducer();
+  float pressure = ReadPressureTransducer();
+  if(pressure > p_max){
+    p_max = pressure;    
+  }
+  p_avg += pressure;
+
+  if(millis()%1000 == 0){
+    p_avg = p_avg/1000;
+    Serial.println(p_avg);
+    p_avg = 0;
+
+  }
+  
+  //Serial.println(p_max);
+
   //Serial.println("Hello from Teensy 4.1!");
   
-  
+    /*
     if(count < 1){
     delay(1000);
     fillSequence();
@@ -155,9 +173,9 @@ void loop()
     //FillServo.writeMicroseconds(FillStartPPM+FilldeltaPPM);
     
     count ++;
+   
   }
-  
-
+  */
   
 
 }
