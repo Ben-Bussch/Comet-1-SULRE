@@ -3,6 +3,7 @@
 #include <Adafruit_INA219.h>
 #include "SD.h"
 #include <Wire.h>
+#include <PT.cpp>
 //#include <SoftwareSerial.h>
 
 //Servos
@@ -25,69 +26,17 @@ int FilldeltaPPM = 750;
 int PPMpos = 0; 
 int count = 0;
 
+//Control
+int PyroPin = 21;
+int FillSequPin = 36;
+int FirePin = 34;
+int clk_time = 0;
+
+
 
 //SD
 const int mchipSelect = BUILTIN_SDCARD;
 
-//Pressure sensors
-Adafruit_INA219 ina219A;
-Adafruit_INA219 ina219B;
-Adafruit_INA219 ina219C;
-Adafruit_INA219 ina219D;
-float ina219intercept = -23.9;
-float ina219gradient = 4.9;
-float p_max = 0;
-float p_avg = 0;
-
-
-void SetupCurrentSensor()
-{
-  // Starting ina
-  if (! ina219A.begin()) {
-    Serial.println("Failed to find INA219A chip");
-    while (1);
-  }
-  ina219A.setCalibration_32V_1A();
-  // if (! ina219B.begin()) {
-  //   Serial.println("Failed to find INA219B chip");
-  //   while (1);
-  // }
-  // ina219B.setCalibration_32V_1A();
-  // if (! ina219C.begin()) {
-  //   Serial.println("Failed to find INA219C chip");
-  //   while (1);
-  // }
-  // ina219C.setCalibration_32V_1A();
-  // if (! ina219D.begin()) {
-  //   Serial.println("Failed to find INA219D chip");
-  //   while (1);
-  // }
-  // ina219D.setCalibration_32V_1A();
-}
-
-float CurrentToPressure(float current, float intercept, float grad)
-{
-  return current * grad + intercept;
-}
-
-float ReadPressureTransducer()
-{
-  //Serial.println("S");
-  float currentmA = ina219A.getCurrent_mA();
-  //float currentA = 1 * ina219A.getCurrent_mA();
-  //Serial.println("GotCurrent");
-  // float currentB = ina219B.getCurrent_mA();
-  // float currentC = ina219C.getCurrent_mA();
-  // float currentD = ina219D.getCurrent_mA();
-  //Serial.print("A");Serial.println(currentA);
-  // data1.pressure2 = CurrentToPressure(currentB, ina219BOffset, ina219BScale);
-  // data1.pressure3 = CurrentToPressure(currentC, ina219COffset, ina219CScale);
-  // data1.pressure4 = CurrentToPressure(currentD, ina219DOffset, ina219DScale);
-  float pressure_reading = CurrentToPressure(currentmA, ina219intercept, ina219gradient);
-  
-  return currentmA;
-
-}
 
 
 void setup()
@@ -101,10 +50,9 @@ void setup()
   //Serial.begin(9600); 
   Serial.println("Hello from Teensy 4.1!");
 
-  SetupCurrentSensor();
+  String PT_status = SetupCurrentSensor();
+  Serial.println(PT_status);
   
-  
-
   //Servos
   NoxEngServo.attach(NoxEngPin);
   NoxEngServo.writeMicroseconds(NoxEngStartPPM); 
@@ -114,6 +62,12 @@ void setup()
 
   FillServo.attach(FillPin);
   FillServo.writeMicroseconds(FillStartPPM); 
+
+  //Inputs and Outputs
+  pinMode(PyroPin, OUTPUT);
+
+  pinMode(FirePin, INPUT);
+  pinMode(FillSequPin,  INPUT);
 
   
 }
@@ -146,6 +100,9 @@ void fillSequence()
 
 void loop()
 {
+  clk_time = millis();
+  
+
   float pressure = ReadPressureTransducer();
   if(pressure > p_max){
     p_max = pressure;    
@@ -154,10 +111,30 @@ void loop()
 
   if(millis()%1000 == 0){
     p_avg = p_avg/1000;
-    Serial.println(p_avg);
+    //Serial.println(p_avg);
     p_avg = 0;
-
   }
+
+
+  if (digitalRead(FillSequPin) == HIGH){
+    Serial.println("Fill is HIGH");
+  }
+
+  if (digitalRead(FirePin) == HIGH){
+    Serial.println("Fire is HIGH");
+    digitalWrite(PyroPin, HIGH);
+  }
+
+  if (digitalRead(FirePin) == LOW){
+    Serial.println("Fire is LOW");
+    digitalWrite(PyroPin, LOW);
+  }
+  
+    
+    
+  
+
+
   
   //Serial.println(p_max);
 
