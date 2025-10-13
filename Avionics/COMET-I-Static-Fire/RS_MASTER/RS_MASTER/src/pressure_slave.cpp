@@ -152,12 +152,6 @@ void loop() {
   clk_time = millis();
 
 
-  if(digitalRead(FillSequPin) == LOW){
-
-
-  }
-
-
   if(clk_time%50 == 0){
    pressure = ReadPressureTransducer();
   }
@@ -214,7 +208,7 @@ void loop() {
             sendString("I am alive");
         } 
         else if (cmd.equalsIgnoreCase("PRESS?")) {
-            sendString(String(pressure_readingglobal, 3) + "," + String(current_readingglobal, 3));
+            sendString(String(pressure, 3));
         } 
         else if (cmd.equalsIgnoreCase("FIRE")) {
           sendString("Fire sequence started");  // send first

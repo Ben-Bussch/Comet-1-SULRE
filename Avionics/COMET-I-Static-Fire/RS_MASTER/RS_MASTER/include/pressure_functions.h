@@ -6,5 +6,5 @@
 String SetupCurrentSensor();
 float CurrentToPressure(float current, float intercept, float grad);
 float ReadPressureTransducer();
-extern float pressure_readingglobal;
-extern float current_readingglobal;
+//extern float pressure_readingglobal;
+//extern float current_readingglobal;
