@@ -8,7 +8,7 @@ Servo IPAEngServo;
 Servo FillServo;
 int NoxEngPin = 6;
 int IPAEngPin = 9;
-int FillPin = 10;
+int FillPin = 11;
 
 int NoxEngStartPPM = 1050;
 int IPAEngStartPPM = 1400;
@@ -45,18 +45,37 @@ void SetupControl(){
   pinMode(FillSequPin,  INPUT);
 }
 
-void fillSequence()
+void Rest(){
+   NoxEngServo.writeMicroseconds(NoxEngStartPPM);
+   IPAEngServo.writeMicroseconds(IPAEngStartPPM); 
+   FillServo.writeMicroseconds(FillStartPPM); 
+}
+int fillSequence(int FillStartTime, int clk_time, int fillSeq)
 {
-
-  NoxEngServo.writeMicroseconds(NoxEngStartPPM);
-  IPAEngServo.writeMicroseconds(IPAEngStartPPM);
+  int filltime = - FillStartTime + clk_time;
   
-  FillServo.writeMicroseconds(FillStartPPM);
-  for (PPMpos = 0; PPMpos <= (FilldeltaPPM); PPMpos += 1) { // goes from 0 degrees to 180 degrees
-    // in steps of 1 ppm
-    FillServo.writeMicroseconds(PPMpos+FillStartPPM);              // tell servo to go to position in variable 'pos'
-    delay(5);                       // waits 5ms for the servo to reach the position
+  if(fillSeq == 0){
+      NoxEngServo.writeMicroseconds(NoxEngStartPPM);
+      IPAEngServo.writeMicroseconds(IPAEngStartPPM);
+      FillServo.writeMicroseconds(FillStartPPM);
+      PPMpos = 0;
+      fillSeq = 1;
   }
+  if(fillSeq == 1 && filltime%5 == 0){
+    // waits 5ms for the servo to reach the position
+    while(PPMpos <= (FilldeltaPPM)){
+      PPMpos += 3;
+      FillServo.writeMicroseconds(PPMpos+FillStartPPM); 
+    }
+    if(PPMpos >= (FilldeltaPPM)){
+      fillSeq = 2;  
+    }
+
+    return filltime;
+  }
+  
+
+
 
 }
 
@@ -65,7 +84,7 @@ int fireSequence(int FireStartTime, int clk_time, int FireSeq)
 {
   int countdown = - 10000 - FireStartTime + clk_time;
 
-  if(FireSeq = 0){
+  if(FireSeq == 0){
       FillServo.writeMicroseconds(FillStartPPM);
       FireSeq = 1;
   }

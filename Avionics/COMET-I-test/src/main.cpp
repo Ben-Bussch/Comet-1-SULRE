@@ -12,7 +12,10 @@ int fillSeq = 0;
 
 int clk_time = 0;
 int FireStartTime = 0;
+int FillStartTime = 0;
+int filltime = 0;
 int launchtime = 0;
+float pressure = 0;
 //SD
 const int mchipSelect = BUILTIN_SDCARD;
 
@@ -42,25 +45,25 @@ void loop()
 {
   clk_time = millis();
 
-  float pressure = ReadPressureTransducer();
-  if(pressure > p_max){
-    p_max = pressure;    
+
+  if(clk_time%50 == 0){
+   pressure = ReadPressureTransducer();
   }
-  p_avg += pressure;
-
-  if(millis()%1000 == 0){
-    p_avg = p_avg/1000;
-    //Serial.println(p_avg);
-    p_avg = 0;
-  }
+  /*if(clk_time%500 == 0){
+   Serial.println(pressure);
+  }*/
 
 
-  if (digitalRead(FillSequPin) == LOW ){
-    Serial.println("Fill is LOW");
+  if (digitalRead(FillSequPin) == LOW && digitalRead(FirePin) == LOW ){
+    Rest();
+    fillSeq = 0;
   }
 
   if (digitalRead(FillSequPin) == HIGH && digitalRead(FirePin) == LOW){
-    Serial.println("Fill is HIGH");
+      filltime = fillSequence(FillStartTime, clk_time, fillSeq);
+      if(filltime%10000 == 0){
+        Serial.println(launchtime/1000);
+    }
   }
 
   
@@ -71,11 +74,14 @@ void loop()
     FireStartTime = clk_time;
   }
 
-  if (digitalRead(FirePin) == HIGH){
+  if (digitalRead(FirePin) == HIGH && digitalRead(FillSequPin) == HIGH){
     //Serial.println("Fire is HIGH");
+    fillSeq = 0; //get out of fill sequence
+
+
     launchtime = fireSequence(FireStartTime, clk_time, fireSeq);
     if(launchtime%1000 == 0){
-        Serial.println(launchtime);
+        Serial.println(launchtime/1000);
     }
   }
 
